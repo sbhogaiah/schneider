@@ -1,0 +1,127 @@
+27-9-16
+--------------------------
+- [components.js] Corrected a check for if the form is present in the modal window, then reset it when closed and reopened
+
+- [styles.css] Corrected the width of the process flow, which had become smaller, due to last css update
+
+- [phpmyadmin] 'products' table, increased the limit for 'failreasons' columns to 1000, as if product fails many times then limit might be less for storing all reasons. 
+
+- [baytester.php] Added new button for removing product from bay, after test fails, and reason is selected. 
+	-- Button appears with resume test button.
+	-- Textarea added above Remove product button for adding remarks.
+
+	-- [phpmyadmin] added new column 'CurStatus' [type 'varchar(100)' default 'NULL'] to products table to track standby for a product
+	-- [phpmyadmin] added new column 'StandbyRemarks' [type 'text'] to products table to store standy remarks for a product
+	-- [phpmyadmin] added new column 'UsageTime' [type 'int' default '0'] to products table to store usagetime for a product (not important, but added to keeping for future requirements)
+	
+	-- [styles.css] Updated styles for new textarea and button
+
+- [start.php] Updating new column 'CurStatus' in products table
+- [stop.php] Changed way of storing fail reasons to also include data time stamp
+- [Remove.php] New file added to control remove of product from bay
+- [Complete.php] Added status update for new columns 'CurStatus' and 'UsageTime' in products table
+
+2-10-16
+--------------------------
+- [baytester.php] Corrected disabling of bays, which are being tested in bay select option, with JS code.
+- [check_product.php] Changed ModelID check to case insensitive, serial number was already case insensitive as mysql in windows is case insensitive.
+
+3-10-16	
+--------------------------
+- [phpmyadmin] - in table 'products', changed column 'Tester' settings to max value to 1000, and not null, for appending testers
+- [baytester.php] - added new button to add tester, after test started and later if multiple testers, and also show active testers
+- [check_activity.php] - to get names of tester to display in the baytester.php
+- [start.php] - removed adding username to 'products' table, as we have to take tester name from baytester page now
+- [add_tester.php] - new file to add tester names
+- [styles.css] - minutes changes for new requirement
+- [admin_charts.php] - show the names of the testers which are added during the test properly, when chart bar is clicked.
+- [admin_reports.php] - added new fields to reports for viewing current test status and tester names
+- [get_products.php] - for getting new data for the reports page
+
+- [styles.css] - cursor for tester-add button changed to pointer.
+
+4-10-16
+---------------------------
+- [styles.css] - changed placement of active tester names
+- [edit_tester.php] - new file for tester name
+- [add_tester.php] - minute changes
+- [bay_tester.php] - new edit and delete option
+- [admin_reports.php] - updated after changing the way testers are stored
+
+6-10-16
+---------------------------
+- [baytester.php] - for ie, changed $this.is(':disabled') to $this.prop('disabled')
+
+16-10-16
+---------------------------
+- [production.php] - to allow drives, to be sent from idf4 production to testing infra. A checkbox was added to switch on the send button.
+
+17-10-16
+---------------------------
+- [partial_test.php] - to add time stamp for partial testing of products manufactured at IDF1 and IDF8.
+	- for operating this page, a testing user has to be created and also location should be either idf1 or idf8 while creating the user.
+	- [phpmyadmin] - added four new columns to 'producttimestamp' table:
+		- 'Src_RxdPartTestDT' [type 'DateTime' default 'None']
+		- 'Src_RxdPartTestOpID' [type 'varchar(50)' default 'Null']
+		- 'Src_SendPartTestDT' [type 'DateTime' default 'None']
+		- 'Src_SendPartTestOpID' [type 'varchar(50)' default 'Null']
+		- 'ProductStage' updated type from int to float
+- [_modules/update_prod_data.php] - to include two new product stages 1.5 1 and 1.8 for partial test start and end.
+- [logistic.php] - updated new check for products coming from idf1 and idf8 for partial testing.
+- [admin_reports.php] 
+	- added options to display partial test send and received time stamp in reports for idf1 and idf8 
+	- also added downtime, usagetime, total time display and failure reasons.
+- [admin_users.php] - found a bug while updating user that the role was not being set to 'baytester' when updating test users.
+- [baytester.php] - added check for idf4 too for the current user when accessing page, as testers can also access partial test page.
+- [_modules/login.php] - added redirect to 'partial_test' or 'baytester' based on user role and location.
+- [index.php] 
+	- made the tester login box to redirect to 'partial_test.php', if test user is from idf1 or idf8. 
+	- changed the already logged in message, to also show for partial test.
+
+26-10-16
+---------------------------
+- [baytester.php], [production.php], [logistic.php] - update message display for product in partial testing
+- [logistic.php] - made receiving of undone partial test for idf1 and idf8 products possible. Thus, it becomes optional.
+- [baytester.php] - added new checkbox to switch to final test of only 1 hour.
+- [phpmyadmin] 
+	- new column 'TestType [type 'Enum' Values 'final', 'burnin']' in 'products' and 'testeractivity' tables.
+	- new column 'TestStartFinal' [type 'datetime' default 'NULL'] in 'products'.
+	- new column 'TestEndFinal' [type 'datetime' default 'NULL'] in 'products'.
+	- new column 'TestCompletedFinal' [type 'int' default '0'] in 'products'.
+- [_modules/start.php] - added a new check to change cycle time to 1 hours, instead of default cycletime.
+- [_modules/complete.php] - added a new check to complete final test, without finalizing the test, so burning test can be redone.
+
+31-10-16
+---------------------------
+- [_modules/complete.php] - changed the condition check with new to make it better.
+- [_modules/start.php] - changed the condition check with new to make it better.
+- [baytester.php] - changed the condition check with new to make it better.
+
+1-11-16
+---------------------------
+- [phpmyadmin] - new columns in table 'testeractivity'
+	- column 'PausedUsageTime' type 'INT' default 0
+	- column 'PausedDownTime' type 'INT' default 0
+	- column 'PausedStatus' type 'VARCHAR(100)' default NULL
+- [_modules/test/pause.php]
+- [_modules/test/continue.php]
+- [baytester.php] - new pause and continue button
+// Pause and continue functionality done
+- [baytester.php] - also removed interlock between 169A and 169B
+
+6-11-16
+---------------------------
+- [admin_reports.php] - tester names display with spaces for proper line breaking if names are many
+- [admin_charts.php] - tester names display with spaces for proper line breaking if names are many
+
+7-11-16
+---------------------------
+- [account.php] - new file for update account
+- [_modules/account_update.php] - new file for account updating ajax code
+- [_partials/nav.php] - change to dropdown menu to see option for updating account in the top right corner, when logged in as production or logistic user.
+
+15-11-16
+---------------------------
+- [complete.php] - updates for some bugs related to final and burnin
+- [baytester.php] - updates for some bugs related to final and burnin
+- [admin_reports.php] - updated with final test display
